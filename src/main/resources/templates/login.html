@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/security-layout">
+<body>
+<div layout:fragment="content">
+    <div class="theme-layout">
+    <div class="container-fluid pdng0">
+        <div class="row merged">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="land-featurearea">
+                    <div class="land-meta">
+                        <div class="friend-logo">
+                            <span><img th:src="@{/images/redbook-logo-gray.png}" alt=""></span>
+                        </div>
+                        <div class="friend-desc">
+                            <span>
+                                Connect with internet on Redbook. It is a Reddit web client service aimed to give more comfortable usage over the forum. You can sign in using your Reddit account.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="login-reg-bg">
+                    <div class="log-reg-area sign">
+                        <!--<form method="post">
+                            <div class="form-group">
+                                <input type="text" id="input" required="required"/>
+                                <label class="control-label" for="input">Username</label><i class="mtrl-select"></i>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" required="required"/>
+                                <label class="control-label" for="input">Password</label><i class="mtrl-select"></i>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" checked="checked"/><i class="check-box"></i>Always Remember Me.
+                                </label>
+                            </div>
+                            <a href="#" title="" class="forgot-pwd">Forgot Password?</a>
+                            <div class="submit-btns">
+                                <button class="mtr-btn signin" type="button"><span>Login</span></button>
+                                <button class="mtr-btn signup" type="button"><span>Register</span></button>
+                            </div>
+                        </form>-->
+                        <form action="/oauth_login" method="post">
+                            <div th:if="${param.error}">
+                                <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                                    Username or password is invalid.
+                                </div>
+                            </div>
+                            <div th:if="${param.logout}">
+                                <div class="alert alert-success col-xs-offset-1 col-xs-10">
+                                    You have been logged out.
+                                </div>
+                            </div>
+                            <div th:if="${(param.signup != null) and (param.signup[0] == 'success')}">
+                                <div class="alert alert-success col-xs-offset-1 col-xs-10">
+                                    Account created. Now you can sign in.
+                                </div>
+                            </div>
+                            <a href="/oauth2/authorization/reddit" class="btn btn-reddit btn-block social-login-btn"><i class="fab fa-reddit-alien"></i> Sign in with Reddit</a>
+                            <hr>
+                            <div class="form-group">
+<!--                                <label for="usernameInput">Username</label>-->
+<!--                                <input type="text" name="username" class="form-control" id="usernameInput" aria-describedby="emailHelp">-->
+                                <label class="sr-only" for="inlineFormUsername">Username</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="fas fa-user"></i></div>
+                                    </div>
+                                    <input type="text" class="form-control" id="inlineFormUsername" placeholder="Username" name="username">
+                                </div>
+                            </div>
+                            <div class="form-group">
+<!--                                <label for="passwordInput">Password</label>-->
+<!--                                <input type="password" class="form-control" id="passwordInput" name="password">-->
+                                <label class="sr-only" for="inlineFormPassword">Password</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="fas fa-lock"></i></div>
+                                    </div>
+                                    <input type="password" class="form-control" id="inlineFormPassword" placeholder="Password" name="password">
+                                </div>
+                                <small id="passwordHelp" class="form-text text-muted">We'll never share your credentials with anyone else.</small>
+                            </div>
+                            <div>
+                                <button style="margin-top: 15px; width: 125px" type="submit" class="btn btn-primary">Login</button>
+                                <a style="float:right;" class="register-link" th:href="@{/signup}">Create account</a>
+                            </div>
+                            <div>
+                                <a class="register-link" th:href="@{/}">Home page</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

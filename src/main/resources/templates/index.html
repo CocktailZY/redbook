@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/home-layout">
+<body>
+<div layout:fragment="content">
+    <div class="theme-layout">
+
+    <section>
+        <div style="padding-top: 42px;" class="gray-bg">
+            <div class="row">
+                <div class="col-lg-3">
+                    <aside class="sidebar static sidebar-left">
+                        <div th:if="${user == null} or (${user != null} and ${user.redditUserId != null})" class="widget">
+                            <h4 class="widget-title">Popular Communities</h4>
+                            <ul class="naves lined-list">
+                                <li th:unless="${reddits == null}" th:each="subreddit : ${reddits}">
+                                    <a th:href="@{/sub/{subname} (subname=${subreddit.displayName})}" >
+                                        <img width="32" height="32" class="img-circle" th:src="${subreddit.iconImg}" th:alt="${subreddit.displayName}" />
+                                        <span th:text="${subreddit.displayName}"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div th:if="${user != null} and ${user.redditUserId == null}" class="widget"> <!-- Redbook user -->
+                            <h4 class="widget-title">Discover Communities</h4>
+                            <ul class="naves lined-list" style="margin-bottom: 20px">
+                                <li th:unless="${pages == null}" th:each="page : ${pages}">
+                                    <a th:href="@{/page/{pagename} (pagename=${page.pageName})}" >
+                                        <img width="32" height="32" class="img-circle" th:src="${page.imageByIconId.imagePath}" th:alt="${page.pageName}" />
+                                        <span th:text="${page.pageName}"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+                <div style="padding-top: 18px" class="col-lg-6">
+                    <div style="max-width: 660px;" class="container">
+                        <div class="row" id="page-contents">
+                            <div class="col-lg-12">
+                                <div class="alert alert-warning" role="alert">
+                                    This app is still in development and some features may not work as expected in this deployed website. You can track the progress <a href="https://trello.com/b/aggbZ4hA/redbook-project" target="_blank" class="alert-link">here</a>.
+                                </div>
+                                <div sec:authorize="isAnonymous()">
+                                    <div class="alert alert-primary alert-dismissible" role="alert">
+                                        Sign in to use the best of Redbook.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Check if it is the Reddit account -->
+                                <div th:if="${user != null}">
+                                    <div th:if="${user.redditUserId == null}"><!-- Not reddit account -->
+                                        <div class="central-meta">
+                                            <div class="new-postbox">
+                                                <figure>
+                                                    <img th:if="${user.getImageByAvatarId() == null}" th:src="@{/images/avatar-default.png}" alt="">
+                                                    <img th:unless="${user.getImageByAvatarId() == null}" th:src="${user.getImageByAvatarId().getImagePath()}" alt="">
+                                                </figure>
+                                                <div class="newpst-input">
+                                                    <textarea id="submit-post-textarea" class="form-control" rows="2" placeholder="Create post"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Posts -->
+                                <div class="loadMore">
+                                    <div th:if="${redditPosts} == true">
+                                        <div class="loadMore" th:if="${posts == null}">
+                                            <div class="central-meta item">
+                                                <div class="user-post">
+                                                    <div class="friend-info">
+                                                        <div class="description">
+                                                            <p>No post is available right now. Try again later.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="central-meta item" th:unless="${posts == null}" th:each="post : ${posts}">
+                                            <div class="user-post">
+                                                <div class="friend-info">
+
+                                                    <figure>
+                                                        <img th:src="${post.subreddit.iconImg}" th:alt="${post.subreddit.displayName}">
+                                                    </figure>
+
+                                                    <div class="friend-name">
+
+                                                        <ins>
+                                                            <a th:href="@{/sub/{subreddit}/ (subreddit=${post.subreddit.displayName})}">
+                                                                <span th:text="${post.subreddit.displayName}"></span>
+                                                            </a>
+                                                        </ins>
+
+                                                        <div th:switch="${post.getDistinguished()}">
+                                                            <span th:case="'admin'" class="secondary-text admin">
+                                                                <span th:text="'Posted by ' + ${post.author}"></span>
+                                                                <span class="distinguisher">A</span>
+                                                            </span>
+                                                            <span th:case="'moderator'" class="secondary-text moderator">
+                                                                <span th:text="'Posted by ' + ${post.author}"></span>
+                                                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-shield-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd" d="M5.187 1.025C6.23.749 7.337.5 8 .5c.662 0 1.77.249 2.813.525a61.09 61.09 0 0 1 2.772.815c.528.168.926.623 1.003 1.184.573 4.197-.756 7.307-2.367 9.365a11.191 11.191 0 0 1-2.418 2.3 6.942 6.942 0 0 1-1.007.586c-.27.124-.558.225-.796.225s-.526-.101-.796-.225a6.908 6.908 0 0 1-1.007-.586 11.192 11.192 0 0 1-2.417-2.3C2.167 10.331.839 7.221 1.412 3.024A1.454 1.454 0 0 1 2.415 1.84a61.11 61.11 0 0 1 2.772-.815z"/>
+                                                                </svg>
+                                                            </span>
+                                                            <span th:case="*" class="secondary-text" th:text="'Posted by ' + ${post.author}"></span>
+                                                            <span style="margin-left: 3px" class="secondary-text post-time-posted" th:text="${post.createdUtc}"></span>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="description">
+
+                                                        <!--<a th:href="@{/sub/{subreddit}/submission/{postID}(subreddit=${post.getSubreddit()}, postID=${post.getName()})}" target="_blank">-->
+                                                        <a th:href="'https://www.reddit.com' + ${post.getPermalink()}" target="_blank">
+                                                            <div th:switch="${post.getDistinguished()}">
+                                                                <p th:case="'moderator'" class="post-title moderator" th:text="${post.getTitle()}"></p>
+                                                                <p th:case="'admin'" class="post-title admin" th:text="${post.getTitle()}"></p>
+                                                                <p th:case="'special'" class="post-title special" th:text="${post.getTitle()}"></p>
+                                                                <p th:case="*" class="post-title" th:text="${post.getTitle()}"></p>
+                                                            </div>
+                                                        </a>
+
+                                                        <div th:if="${!post.getFlairRichText().isEmpty()}" style="display: table; width: 100%; margin: 10px 0">
+                                                            <span class="badge badge-light" th:text="${post.getFlairRichText()}"></span>
+                                                        </div>
+
+                                                        <p class="" th:utext="${post.getSelftext()}"></p>
+
+                                                    </div>
+                                                    <div class="post-meta">
+
+                                                        <div th:if="${post.isSelf()}">
+                                                            <span></span> <!-- Text only -->
+                                                        </div>
+                                                        <div th:unless="${post.isSelf()}">
+                                                            <div th:if="${post.isImage()}"> <!-- Image only -->
+                                                                <a th:href="${post.destination}" target="_blank"><img th:src="${post.preview}" alt="image" /></a>
+                                                            </div>
+                                                            <div th:unless="${post.isImage()}"> <!-- Link only -->
+                                                                <a target="_blank" th:href="${post.destination}" style="display: table; width: 100%">
+                                                                    <span class="post-link" th:utext="${post.destination} + '<i class=\'fas fa-external-link-alt\'></i>'"></span>
+                                                                    <div th:if="${post.thumbnail != null}" class="post-thumbnail">
+                                                                        <img th:src="${post.thumbnail}" th:alt="${post.title}"/>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="we-video-info">
+                                                            <ul style="float: left">
+                                                                <li>
+                                                                    <span class="upvote-ratio" th:text="${post.getUpvoteRatio()} + '% Liked'"></span>
+                                                                </li>
+                                                            </ul>
+                                                            <ul style="float: right;" class="reactions">
+                                                                <li class="li-like">
+                                                                <span class="like">
+                                                                    <a sec:authorize="isAuthenticated()" data-toggle="tooltip" title="Like" class="btn-vote btn-vote-upvote" href="javascript:void(0)" th:data-submission="${post.getName()}">👍</a>
+                                                                    <a sec:authorize="isAnonymous()" data-toggle="tooltip" title="Sign in to vote" th:href="@{/oauth_login}">👍</a>
+                                                                </span>
+                                                                </li>
+                                                                <li class="li-score">
+                                                                    <span class="badge badge-light postScore" th:text="${post.getScore()}"></span>
+                                                                </li>
+                                                                <li class="li-dislike">
+                                                                <span class="dislike">
+                                                                    <a sec:authorize="isAuthenticated()" data-toggle="tooltip" title="Dislike" class="btn-vote btn-vote-downvote" href="javascript:void(0)" th:data-submission="${post.getName()}">👎</a>
+                                                                    <a sec:authorize="isAnonymous()" data-toggle="tooltip" title="Sign in to vote" th:href="@{/oauth_login}">👎</a>
+                                                                </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div class="post-actions-wrapper">
+                                                            <div class="">
+                                                                <ul class="post-actions-list list-group-horizontal-sm">
+                                                                    <li>
+                                                                        <a class="post-action-link" href="#">
+                                                                            <i class="fas fa-save"></i> Save
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="post-action-link" href="#">
+                                                                            <i class="fas fa-share"></i> Share
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div th:if="${redditPosts} == false">
+                                        <div class="central-meta item" th:each="submission : ${submissions}" th:with="authorAdminRole=${submission.getUsersByAuthorId().hasRole('ROLE_ADMIN')}, authorModRole=${submission.getUsersByAuthorId().hasRole('ROLE_MOD')}">
+                                            <div class="user-post">
+                                                <div class="friend-info">
+                                                    <div class="friend-name">
+
+                                                        <ins>
+                                                            <a th:href="'#'">
+                                                                <span th:text="${submission.getPageByPageId().getPageName()}"></span>
+                                                            </a>
+                                                        </ins>
+
+                                                        <div th:switch="${authorAdminRole}">
+                                                            <span th:case="true" class="secondary-text admin">
+                                                                <span th:text="'Posted by ' + ${submission.getUsersByAuthorId().getUsername()}"></span>
+                                                                <span class="distinguisher">A</span>
+                                                            </span>
+                                                            <div th:case="false">
+                                                                <div th:switch="${authorModRole}">
+                                                                    <span th:case="true" class="secondary-text moderator">
+                                                                        <span th:text="'Posted by ' + ${submission.getUsersByAuthorId().getUsername()}"></span>
+                                                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-shield-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                          <path fill-rule="evenodd" d="M5.187 1.025C6.23.749 7.337.5 8 .5c.662 0 1.77.249 2.813.525a61.09 61.09 0 0 1 2.772.815c.528.168.926.623 1.003 1.184.573 4.197-.756 7.307-2.367 9.365a11.191 11.191 0 0 1-2.418 2.3 6.942 6.942 0 0 1-1.007.586c-.27.124-.558.225-.796.225s-.526-.101-.796-.225a6.908 6.908 0 0 1-1.007-.586 11.192 11.192 0 0 1-2.417-2.3C2.167 10.331.839 7.221 1.412 3.024A1.454 1.454 0 0 1 2.415 1.84a61.11 61.11 0 0 1 2.772-.815z"/>
+                                                                        </svg>
+                                                                    </span>
+                                                                    <span th:case="false" th:text="'Posted by ' + ${submission.getUsersByAuthorId().getUsername()}" class="secondary-text"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="description">
+
+                                                        <div th:switch="${authorAdminRole}">
+                                                            <p th:case="true" class="post-title" th:text="${submission.getTitle()}"></p>
+                                                            <div th:case="false">
+                                                                <div th:switch="${authorModRole}">
+                                                                    <p th:case="true" class="post-title moderator" th:text="${submission.getTitle()}"></p>
+                                                                    <p th:case="false" class="post-title" th:text="${submission.getTitle()}"></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <p th:if="${submission.getContent()} != null" th:utext="${submission.getContent()}"></p>
+
+                                                    </div>
+                                                    <div class="post-meta">
+
+                                                        <!--<div th:unless="${post.isSelf()}">
+                                                            <div th:if="${post.isImage()}"> &lt;!&ndash; Image only &ndash;&gt;
+                                                                <a th:href="${post.getDestination()}" target="_blank"><img th:src="${post.getPreview()}" alt="image" /></a>
+                                                            </div>
+                                                            <div th:unless="${post.isImage()}"> &lt;!&ndash; Link only &ndash;&gt;
+                                                                <a class="post-link" th:href="${post.getDestination()}" th:text="${post.getDestination()}"></a>
+                                                            </div>
+                                                        </div>-->
+
+
+                                                        <div class="we-video-info">
+                                                            <ul style="float: right;" class="reactions">
+                                                                <li class="li-like">
+                                                                <span class="like" data-toggle="tooltip" title="like">
+                                                                    <a sec:authorize="isAuthenticated()" class="btn-vote btn-vote-upvote" href="javascript:void(0)" th:data-submission="${submission.getSubmissionId()}">👍</a>
+                                                                    <a sec:authorize="isAnonymous()" th:href="@{/oauth_login}">👍</a>
+                                                                </span>
+                                                                </li>
+                                                                <li class="li-score">
+                                                                    <span class="badge badge-light postScore" th:text="${submission.getScore()}"></span>
+                                                                </li>
+                                                                <li class="li-dislike">
+                                                                <span class="dislike" data-toggle="tooltip" title="dislike">
+                                                                    <a sec:authorize="isAuthenticated()" class="btn-vote btn-vote-downvote" href="javascript:void(0)" th:data-submission="${submission.getSubmissionId()}">👎</a>
+                                                                    <a sec:authorize="isAnonymous()" th:href="@{/oauth_login}">👎</a>
+                                                                </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div class="post-actions-wrapper">
+                                                            <div class="">
+                                                                <ul class="post-actions-list list-group-horizontal-sm">
+                                                                    <li>
+                                                                        <a class="post-action-link" href="#">
+                                                                            <i class="fas fa-save"></i> Save
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="post-action-link" href="#">
+                                                                            <i class="fas fa-share"></i> Share
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- centerl meta -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <aside class="sidebar sidebar-right">
+                        <div class="widget static">
+                            <h4 class="widget-title"></h4>
+                            <div th:if="${user != null}" class="your-page">
+                                <figure>
+                                    <a class="sidebar-image" href="#" title="">
+                                        <img th:if="${user.imageByAvatarId != null}" th:src="${user.imageByAvatarId.imagePath}" alt="profile_pic">
+                                        <img th:unless="${user.imageByAvatarId != null}" th:src="@{/images/avatar-default.png}" alt="avatar_default">
+                                    </a>
+                                </figure>
+                                <div class="page-meta">
+                                    <a href="#" title="" class="underline" sec:authentication="name"></a>
+                                    <span><i class="fas fa-meteor"></i><span th:text="${user.karma} + ' karma'"></span></span>
+                                </div>
+                            </div>
+                            <div th:unless="${user != null}" class="your-page">
+                                <figure>
+                                    <a class="sidebar-image" href="#" title="">
+                                        <img th:src="@{/images/avatar-default.png}" alt="avatar_default">
+                                    </a>
+                                </figure>
+                                <div class="page-meta">
+                                    <a href="/oauth_login" class="underline">Sign In</a>
+                                </div>
+                            </div>
+                            <h4 class="widget-title"></h4>
+                        </div><!-- page like widget -->
+                        <div th:if="${user != null} and ${user.redditUserId == null}" class="widget static">
+                            <div class="banner">
+                                <div class="baner-top">
+                                    <span><img alt="" src=""></span>
+                                </div>
+                                <div class="banermeta">
+                                    <p>
+                                        Submit the post
+                                    </p>
+                                    <a th:href="@{/submission/create}" class="bluesh">Create post</a>
+                                </div>
+                                <div class="baner-top">
+                                    <span><img alt="" src=""></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${user != null} and ${user.redditUserId == null}" class="widget static">
+                            <div class="banner bluesh">
+                                <div class="baner-top">
+                                    <span><img alt="" src=""></span>
+                                </div>
+                                <div class="banermeta">
+                                    <p>
+                                        Create Your New Community Page
+                                    </p>
+                                    <a href="#" class="white">Create Page</a>
+                                </div>
+                                <div class="baner-top">
+                                    <span><img alt="" src=""></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding: 20px" class="widget friend-list stick-widget" id="footerWidget">
+                            <ul>
+                                <li>
+                                    <a href="https://trello.com/b/aggbZ4hA/redbook-project" target="_blank">Help</a>
+                                </li>
+                                <li>
+                                    <a href="https://github.com/nihadguluzade/redbook" target="_blank">About</a>
+                                </li>
+                                <li>
+                                    <a>Redbook Project by Nihad Guluzade © 2020</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/home-layout">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="gap gray-bg">
+            <div style="max-width: 980px; margin: 70px auto;" class="container-fluid">
+                <div style="border-bottom: 1px solid #ffffff; margin-bottom: 10px; padding:0!important;" class="col-lg-7">
+                    <h5>Create a post</h5>
+                </div>
+                <div class="row">
+                    <div class="col-lg-7 col-sm-12">
+                        <div class="row">
+                            <div class="central-meta item">
+                                <div class="user-post">
+                                    <div class="friend-info">
+                                        <figure>
+                                            <img style="" src="../images/resources/friend-avatar10.jpg" alt="">
+                                        </figure>
+                                        <div class="friend-name">
+                                            <ins><a href="time-line.html" title="">Username</a></ins>
+                                        </div>
+                                        <div class="post-meta">
+                                            <div class="description">
+                                                <form method="post" class="submission-post-form" th:action="@{/submission/postSubmission}" th:object="${submission}">
+                                                    <div th:if="${(param.error != null) and (param.error[0] == 'zeropage')}">
+                                                        <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                                                            Page is not selected.
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <select name="pageId" class="form-control form-control-sm" id="pageDropdownList">
+                                                            <option value="0">-- Select Page --</option>
+                                                            <option th:each="page : ${pageList}" th:value="${page.pageId}" th:text="${page.pageName}"></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control form-control-sm" placeholder="Title" name="title">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <textarea class="form-control form-control-sm"  rows="5" placeholder="Text (optional)" name="content"></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button style="float: left" class="btn-sm btn-outline-danger flair"><i class="fas fa-plus"></i> NSFW</button>
+                                                        <button type="submit" style="float:right;" class="btn btn-sm btn-primary btn-form-reddit submit">Post</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-sm-12">
+                        <div class="card card-side card-side-small" style="width: 18rem;">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item heading">Posting rules on Redbook</li>
+                                <li class="list-group-item">1. Follow community's rules</li>
+                                <li class="list-group-item">2. Behave like you would in real life</li>
+                                <li class="list-group-item">3. Look for original source of content</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>
