@@ -2,6 +2,7 @@ package io.github.nihadguluzade.redbook.rest;
 
 import io.github.nihadguluzade.redbook.security.AccessTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,7 +20,7 @@ import java.util.Collections;
 public class SubredditRestController {
 
     private AccessTokenProvider accessTokenProvider;
-    private String userAgent = "your_user_agent";
+    @Value("${userAgent}") private String userAgent;
 
     @Autowired
     public SubredditRestController(AccessTokenProvider accessTokenProvider) {

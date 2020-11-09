@@ -2,6 +2,8 @@ package io.github.nihadguluzade.redbook.rest;
 
 import io.github.nihadguluzade.redbook.security.AccessTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -12,12 +14,13 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/home")
+@PropertySource("classpath:reddit.properties")
 public class HomeRestController {
 
     private AccessTokenProvider accessTokenProvider;
     private RestTemplate restTemplate;
     private HttpHeaders headers;
-    private String userAgent = "your_user_agent";
+    @Value("${userAgent}") private String userAgent;
 
     @Autowired
     public HomeRestController(AccessTokenProvider accessTokenProvider) {

@@ -25,5 +25,4 @@ board. The database used for the non-reddit section is PostgreSQL.
 
 ### Compile and Run
 
-To compile and run it on your machine, assign your client id, secret, and user agent to *reddit.properties* file and 
-classes in *security and rest* packages. After this, run it from IDE or with `mvn spring-boot:run` command.
+To compile and run it on your machine, assign your client id, secret, and user agent in *reddit.properties* file. After this, run it from IDE or with `mvn spring-boot:run` command.

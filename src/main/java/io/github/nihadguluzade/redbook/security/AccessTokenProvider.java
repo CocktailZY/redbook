@@ -3,6 +3,8 @@ package io.github.nihadguluzade.redbook.security;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,12 +28,21 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @Component
+@PropertySource("classpath:reddit.properties")
 public class AccessTokenProvider extends AuthorizationCodeAccessTokenProvider implements Serializable {
 
-    private String accessUri = "https://www.reddit.com/api/v1/access_token";
-    private final String client_id = "your_client_id";
-    private final String client_secret = "your_client_secret";
-    private final String userAgent = "your_user_agent";
+    @Value("${accessTokenUri}")
+    private String accessUri;
+
+    @Value("${clientId}")
+    private String client_id;
+
+    @Value("${clientSecret}")
+    private String client_secret;
+
+    @Value("${userAgent}")
+    private String userAgent;
+
     private String clientToken;
     private static String oauth2Token;
     private boolean OAuth2TokenActive;
