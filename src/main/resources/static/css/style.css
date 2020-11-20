@@ -10336,3 +10336,12 @@ ul.lined-list li:last-child {
     border-radius: 5px;
     max-width: 140px;
 }
+
+header ul.nav li a.nav-link {
+    border-radius: 1px;
+    transition: all .15s;
+} 
+
+header ul.nav li a.nav-link:hover {
+    background-color: #1767ad;
+}

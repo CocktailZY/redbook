@@ -1,6 +1,5 @@
 package io.github.nihadguluzade.redbook.controller;
 
-import io.github.nihadguluzade.redbook.dao.UserRepository;
 import io.github.nihadguluzade.redbook.entity.UsersEntity;
 import io.github.nihadguluzade.redbook.service.UsersService;
 import org.springframework.format.datetime.DateFormatter;

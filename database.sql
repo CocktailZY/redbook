@@ -27,6 +27,8 @@ BEGIN
 END
 $do$;
 
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA redbook TO redbook;
+
 CREATE TABLE IF NOT EXISTS redbook.image (
 	image_id INT GENERATED ALWAYS AS IDENTITY,
 	image_path VARCHAR(255) NOT NULL,
@@ -43,7 +45,7 @@ CREATE TABLE IF NOT EXISTS redbook.users (
 	user_id INT GENERATED ALWAYS AS IDENTITY,
 	username VARCHAR(50) NOT NULL UNIQUE,
 	email VARCHAR(50),
-	password VARCHAR(255) NOT NULL,
+	password VARCHAR(255),
 	date_of_birth DATE,
 	join_date DATE NOT NULL,
 	reddit_user_id VARCHAR(20),
@@ -51,7 +53,7 @@ CREATE TABLE IF NOT EXISTS redbook.users (
 	avatar_id INT,
 	description TEXT,
 	karma INT,
-	coins MONEY,
+	coins DECIMAL,
 	banned BOOLEAN,
 	deleted BOOLEAN,
 	delete_date TIMESTAMPTZ,
@@ -60,8 +62,6 @@ CREATE TABLE IF NOT EXISTS redbook.users (
 		REFERENCES redbook.image(image_id)
 			ON DELETE SET NULL
 );
-
-ALTER TABLE redbook.users DROP CONSTRAINT users_email_key;
 
 CREATE TABLE IF NOT EXISTS redbook.privilege (
 	privilege_id INT GENERATED ALWAYS AS IDENTITY,

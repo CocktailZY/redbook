@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 @Entity
 @Table(name = "users", schema = "redbook", catalog = "redbook")

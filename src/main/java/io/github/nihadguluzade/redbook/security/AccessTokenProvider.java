@@ -63,8 +63,7 @@ public class AccessTokenProvider extends AuthorizationCodeAccessTokenProvider im
 
     @Override
     public OAuth2AccessToken obtainAccessToken(OAuth2ProtectedResourceDetails details, AccessTokenRequest request) throws UserRedirectRequiredException, UserApprovalRequiredException, AccessDeniedException, OAuth2AccessDeniedException {
-        // Check if user is logged in
-        if ((SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof DefaultOAuth2User)) {
+        if ((SecurityContextHolder.getContext().getAuthentication() != null) && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof DefaultOAuth2User)) {
             if (OAuth2TokenActive && oauth2Token != null) {
                 return new DefaultOAuth2AccessToken(oauth2Token);
             }

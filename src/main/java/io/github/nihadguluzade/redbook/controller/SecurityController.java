@@ -2,14 +2,9 @@ package io.github.nihadguluzade.redbook.controller;
 
 import io.github.nihadguluzade.redbook.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ResolvableType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class SecurityController {
-
-    @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Autowired
     private UsersService usersService;
@@ -42,7 +34,7 @@ public class SecurityController {
     @RequestMapping("/formLoginSuccess")
     public ModelAndView formLoginInfo(Model model, @AuthenticationPrincipal Authentication authentication) {
         // UserDetails is for form-based login
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        // UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return new ModelAndView("redirect:/");
     }
 

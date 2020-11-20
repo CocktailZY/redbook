@@ -14,11 +14,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class UsersService {

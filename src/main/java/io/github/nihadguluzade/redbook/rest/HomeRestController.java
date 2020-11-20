@@ -1,21 +1,28 @@
 package io.github.nihadguluzade.redbook.rest;
 
 import io.github.nihadguluzade.redbook.security.AccessTokenProvider;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/home")
 @PropertySource("classpath:reddit.properties")
 public class HomeRestController {
+
+    private static final Logger logger = LoggerFactory.getLogger(HomeRestController.class);
 
     private AccessTokenProvider accessTokenProvider;
     private RestTemplate restTemplate;
@@ -28,7 +35,9 @@ public class HomeRestController {
     }
 
     @GetMapping("/sub/{subreddit}")
-    public ResponseEntity<String> getPosts(@PathVariable String subreddit) {
+    @Async
+    public CompletableFuture<ResponseEntity<String>> getPosts(@PathVariable String subreddit) {
+        logger.info("getPosts()");
         restTemplate = new RestTemplate();
         headers = new HttpHeaders();
         String token = accessTokenProvider.obtainAccessToken();
@@ -47,7 +56,7 @@ public class HomeRestController {
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-            return response;
+            return CompletableFuture.completedFuture(response);
         } catch (Exception e) {
             e.printStackTrace();
         }
