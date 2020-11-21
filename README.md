@@ -1,6 +1,6 @@
 # Redbook - web client for reddit
 
-**Live demo:** http://salty-shelf-51621.herokuapp.com
+**Live demo:** https://redditbook.herokuapp.com/
 
 Redbook is a web client application developed with Java 11 and Spring framework that also includes custom section for 
 non-reddit activities. It utilizes the reddit APIs to function.
