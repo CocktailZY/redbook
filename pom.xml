@@ -133,6 +133,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Switch back from Spring Boot 2.x standard HikariCP to Tomcat JDBC,
+    	configured later in Heroku (see https://stackoverflow.com/a/49970142/4964553) -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jdbc</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
