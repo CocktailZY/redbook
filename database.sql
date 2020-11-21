@@ -172,6 +172,16 @@ CREATE TABLE IF NOT EXISTS redbook.comments (
 	PRIMARY KEY(comment_id)
 );
 
+CREATE TABLE IF NOT EXISTS redbook.accesstoken (
+	token_id INT GENERATED ALWAYS AS IDENTITY,
+	grant_type VARCHAR(30) NOT NULL,
+	token VARCHAR(120) NOT NULL,
+	token_type VARCHAR(20) NOT NULL,
+	expire_time TIMESTAMPTZ NOT NULL,
+	scope VARCHAR(120) NOT NULL,
+	PRIMARY KEY(token_id)
+);
+
 INSERT INTO redbook.privilege (privilege_name, privilege_description)
 VALUES 
 	('ROLE_ADMIN', 'Redbook admins'),

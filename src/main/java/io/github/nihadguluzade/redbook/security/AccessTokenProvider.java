@@ -3,6 +3,8 @@ package io.github.nihadguluzade.redbook.security;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
@@ -22,10 +24,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Component
 @PropertySource("classpath:reddit.properties")
@@ -46,8 +48,9 @@ public class AccessTokenProvider extends AuthorizationCodeAccessTokenProvider im
     private String clientToken;
     private static String oauth2Token;
     private boolean OAuth2TokenActive;
+    private LocalDateTime expireTime;
 
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private Logger logger = LoggerFactory.getLogger(AccessTokenProvider.class);
 
     public String obtainAccessToken() {
         BaseOAuth2ProtectedResourceDetails details = new BaseOAuth2ProtectedResourceDetails();
@@ -82,8 +85,15 @@ public class AccessTokenProvider extends AuthorizationCodeAccessTokenProvider im
             }
         }
 
+        LocalDateTime currentTime = LocalDateTime.now();
+
         if (clientToken != null) {
-            return new DefaultOAuth2AccessToken(clientToken);
+            // check if token not expired
+            if (currentTime.isBefore(expireTime)) {
+                return new DefaultOAuth2AccessToken(clientToken);
+            }
+
+            logger.info("Token is expired. Renewing client token.");
         }
 
         RestTemplate restTemplate = new RestTemplate();
@@ -108,6 +118,10 @@ public class AccessTokenProvider extends AuthorizationCodeAccessTokenProvider im
         }
 
         clientToken = String.valueOf(map.get("access_token"));
+        expireTime = currentTime.plusHours(1);
+        logger.info("Current time: " + currentTime);
+        logger.info("Token will expire: " + expireTime);
+
         return new DefaultOAuth2AccessToken(clientToken);
     }
 
