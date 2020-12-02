@@ -8,7 +8,7 @@
     <div class="theme-layout">
 
     <section>
-        <div style="padding-top: 42px;" class="gray-bg">
+        <div style="padding-top: 56px;" class="container-fluid gray-bg">
             <div class="row">
                 <div class="col-lg-3">
                     <aside class="sidebar static sidebar-left">
@@ -85,6 +85,7 @@
                                             <div class="user-post">
                                                 <div class="friend-info">
 
+                                                    
                                                     <figure>
                                                         <img th:src="${post.subreddit.iconImg}" th:alt="${post.subreddit.displayName}">
                                                     </figure>
@@ -137,14 +138,14 @@
                                                         <div th:if="${post.isSelf()}">
                                                             <span></span> <!-- Text only -->
                                                         </div>
-                                                        <div th:unless="${post.isSelf()}">
+                                                        <div th:unless="${post.isSelf()}" class="container">
                                                             <div th:if="${post.isImage()}"> <!-- Image only -->
                                                                 <a th:href="${post.destination}" target="_blank"><img th:src="${post.preview}" alt="image" /></a>
                                                             </div>
-                                                            <div th:unless="${post.isImage()}"> <!-- Link only -->
-                                                                <a target="_blank" th:href="${post.destination}" style="display: table; width: 100%">
-                                                                    <span class="post-link" th:utext="${post.destination} + '<i class=\'fas fa-external-link-alt\'></i>'"></span>
-                                                                    <div th:if="${post.thumbnail != null}" class="post-thumbnail">
+                                                            <div th:unless="${post.isImage()}" class="row"> <!-- Link only -->
+                                                                <a target="_blank" th:href="${post.destination}" style="display: block; width: 100%">
+                                                                    <span class="col-12 post-link" th:utext="${post.destination} + '<i class=\'fas fa-external-link-alt\'></i>'"></span>
+                                                                    <div th:if="${post.thumbnail != null}" class="col-12 post-thumbnail">
                                                                         <img th:src="${post.thumbnail}" th:alt="${post.title}"/>
                                                                     </div>
                                                                 </a>

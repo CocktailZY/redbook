@@ -1196,6 +1196,12 @@ header.sticky {
     max-width: 270px;
 }
 
+@media screen and (max-width: 980px) {
+    .sidebar {
+        display: none!important;
+    }
+}
+
 .sidebar-image {
     width: 100%;
     display: block;
@@ -5776,8 +5782,15 @@ canvas {
 .post-link {
     color: #cb4b16;
     font-size: 12px;
-    width: 70%;
     float: left;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
 }
 
 .post-link i {

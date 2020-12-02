@@ -1,66 +1,49 @@
-<header th:fragment="header">
-    <div class="wrapper bg-navbar navbar-sticky">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-dark">
-                <!--<a class="navbar-brand" th:href="@{/}">
-                    <img th:src="@{/images/redbook-logo-light.png}" width="103" height="auto" class="d-inline-block align-text-top" alt="Redbook">
-                </a>-->
-                <a class="navbar-brand" th:href="@{/}">
-                    Redbook
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<nav th:fragment="header" class="navbar navbar-expand-lg navbar-dark bg-navbar navbar-sticky pl-4 pr-4">
+    <!--<a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/redbook-logo-light.png}" width="103" height="auto" class="d-inline-block align-text-top" alt="Redbook">
+    </a>-->
+    <a class="navbar-brand" th:href="@{/}">
+        Redbook
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav nav-pills my-lg-0 ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/}"><i class="ti-home"></i>Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/sub/popular}"><i class="ti-arrow-top-right"></i>Popular</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/sub/all}"><i class="ti-medall-alt"></i>All</a>
+            </li>
+            <li class="nav-item">
+                <div sec:authorize="isAuthenticated()">
+                    <div class="dropdown">
+                        <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="ti-user"></i> <!-- TODO: show user avatar -->
+                            <span sec:authentication="name"></span>
+                            <i style="padding-left: 5px" class="ti-angle-down"></i>
+                        </a>
 
-                    <form style="margin-left: 12px" class="form-inline mr-auto">
-                        <!--<div class="input-group input-group-sm" style="max-width:360px;">
-                            <input style="height: 30px" class="form-control" placeholder="Search" name="srch-term" type="search">
-                            <div class="input-group-btn">
-                                <button class="btn search-button my-2 my-sm-0" type="submit"><i class="ti-search"></i></button>
-                            </div>
-                        </div>-->
-                    </form>
-
-                    <ul class="nav nav-pills my-lg-0">
-                        <li class="nav-item active">
-                            <a class="nav-link" th:href="@{/}"><i class="ti-home"></i>Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/sub/popular}"><i class="ti-arrow-top-right"></i>Popular</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/sub/all}"><i class="ti-medall-alt"></i>All</a>
-                        </li>
-                        <li class="nav-item">
-                            <div sec:authorize="isAuthenticated()">
-                                <div class="dropdown">
-                                    <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="ti-user"></i> <!-- TODO: show user avatar -->
-                                        <span sec:authentication="name"></span>
-                                        <i style="padding-left: 5px" class="ti-angle-down"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <a class="dropdown-item" href="#">Profile</a>
-                                        <a class="dropdown-item" href="#">Settings</a>
-                                        <a class="dropdown-item" href="#">
-                                            <form th:action="@{/logout}" method="post">
-                                                <input type="submit" value="Logout" />
-                                            </form>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div sec:authorize="isAnonymous()">
-                                <a style="" class="nav-link" th:href="@{/oauth_login}"><i class="ti-user"></i>Sign In</a>
-                            </div>
-                        </li>
-                    </ul>
-
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#">Profile</a>
+                            <a class="dropdown-item" href="#">Settings</a>
+                            <a class="dropdown-item" href="#">
+                                <form th:action="@{/logout}" method="post">
+                                    <input type="submit" value="Logout" />
+                                </form>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </nav>
-        </div>
+                <div sec:authorize="isAnonymous()">
+                    <a style class="nav-link" th:href="@{/oauth_login}"><i class="ti-user"></i>Sign In</a>
+                </div>
+            </li>
+        </ul>
     </div>
-</header>
+</nav>
